@@ -4,7 +4,7 @@ DCEUI is an abbreviation for Docker CLI(no affiliation) Extended UI - A console 
 ![image](https://user-images.githubusercontent.com/44140903/199591629-fab1b285-10ea-4908-87ac-ab0e75a6bdb2.png)
 
 
-## Techstack
+## Tech stack
 The application is written in C# utilising the [.NET Core](https://dotnet.microsoft.com/en-us/) framework by Microsoft and [Spectre.Console](https://spectreconsole.net) UI library. 
 
 
