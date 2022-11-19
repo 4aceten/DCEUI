@@ -770,10 +770,6 @@ public class CommandLineHandler
     **/
     private void redirect_back_to_main_menu_ui()
     {
-        AnsiConsole.WriteLine("Redirecting to main menu...");
-
-        Thread.Sleep(1200);
-
         this.re_render_application();
     }
 
