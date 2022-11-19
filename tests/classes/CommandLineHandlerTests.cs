@@ -41,10 +41,9 @@ namespace DCEUI.Tests
             this.commandLineHandler.render_header_ui();
 
             string cli_text_output = AnsiConsole.ExportText();
-            // Then
+
             Assert.AreNotEqual("", cli_text_output);
             Assert.IsTrue((cli_text_output.Contains("©Kristian-n-a 2022 - 2022")));
-            Assert.IsTrue((cli_text_output.Contains("DCEUI is an abbreviation for Docker CLI extended UI - A console application for \nextending the Docker CLI with useful UI elements.")));
         }
 
         [TestMethod()]
