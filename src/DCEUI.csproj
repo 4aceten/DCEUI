@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <RuntimeIdentifiers>osx-x64;linux-x64;win-x64</RuntimeIdentifiers>
     <Configurations>Release;Debug</Configurations>
-    <ReleaseVersion>1.0</ReleaseVersion>
+    <ReleaseVersion>1.1</ReleaseVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

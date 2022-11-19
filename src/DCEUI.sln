@@ -36,6 +36,6 @@ Global
 		$2.FileWidth = 80
 		$2.TabsToSpaces = True
 		$2.scope = text/plain
-		version = 1.0
+		version = 1.1
 	EndGlobalSection
 EndGlobal
