@@ -66,12 +66,6 @@ public class CommandLineHandler
         );
 
         AnsiConsole.WriteLine("©Kristian-n-a 2022 - " + DateTime.Now.ToString("yyyy"));
-
-        var rule = new Rule();
-        rule.Style = Style.Parse(Color.Red.ToString());
-        AnsiConsole.Write(rule);
-
-        AnsiConsole.WriteLine("DCEUI is an abbreviation for Docker CLI extended UI - A console application for extending the Docker CLI with useful UI elements.");
     }
 
 
