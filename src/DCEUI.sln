@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DCEUI", "DCEUI.csproj", "{91A2464C-5739-43EE-B360-4DC99C2B914B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCEUI", "DCEUI.csproj", "{91A2464C-5739-43EE-B360-4DC99C2B914B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "..\tests\Tests.csproj", "{C3A8A5D6-395E-4F63-ABAF-47B8ED137D2A}"
 EndProject
@@ -27,5 +27,15 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BEDE9554-F407-4CE1-A917-A53A97CE4023}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $2
+		$2.FileWidth = 80
+		$2.TabsToSpaces = True
+		$2.scope = text/plain
+		version = 1.0
 	EndGlobalSection
 EndGlobal
