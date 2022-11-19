@@ -293,7 +293,7 @@ public class CommandLineHandler
     {
         var selectionPrompt = new SelectionPrompt<string>();
         selectionPrompt.Title($"Select {user_selected_menu_category}:");
-        selectionPrompt.MoreChoicesText("[grey](Move up and down to reveal more containers)[/]");
+        selectionPrompt.MoreChoicesText("[grey](Move up and down to reveal more)[/]");
 
         return selectionPrompt;
     }
@@ -312,9 +312,9 @@ public class CommandLineHandler
 
         multiSelectionPrompt.Title($"Select {user_selected_menu_category}:");
         multiSelectionPrompt.Required();
-        multiSelectionPrompt.MoreChoicesText("[grey](Move up and down to reveal more Docker containers)[/]");
+        multiSelectionPrompt.MoreChoicesText("[grey](Move up and down to reveal more)[/]");
         multiSelectionPrompt.InstructionsText(
-            "[grey](Press [blue]<space>[/] to toggle a container, " +
+            "[grey](Press [blue]<space>[/] to toggle, " +
             "[green]<enter>[/] to accept)[/]"
         );
 
