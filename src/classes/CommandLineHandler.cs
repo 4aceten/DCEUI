@@ -258,8 +258,6 @@ public class CommandLineHandler
     **/
     public void render_docker_output_data()
     {
-        AnsiConsole.WriteLine();
-
         foreach (var data in this.Docker.get_data_menu_instruction_response())
         {
             AnsiConsole.WriteLine(data.Value);
@@ -278,8 +276,6 @@ public class CommandLineHandler
     **/
     public void render_docker_inspect_data()
     {
-        AnsiConsole.WriteLine();
-
         AnsiConsole.WriteLine(this.Docker.get_cli_response());
 
         this.render_back_ui_button();

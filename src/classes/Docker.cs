@@ -109,7 +109,7 @@ public class Docker
 
     public void get_all_docker_images()
     {
-        this.data_response_parser(os.run_command(cli_command, @"images -a --format ""{{.ID}},{{.Repository}}"""));
+        this.data_response_parser(os.run_command(cli_command, @"images -a"));
         if (data_menu_instruction_response.Count == 0)
         {
             cli_response = "Error: Could not find any images.";
@@ -118,7 +118,7 @@ public class Docker
 
     public void get_all_docker_volumes()
     {
-        this.data_response_parser(os.run_command(cli_command, @"volume ls --format ""{{.Name}}"""));
+        this.data_response_parser(os.run_command(cli_command, @"volume ls"));
         if (data_menu_instruction_response.Count == 0)
         {
             cli_response = "Error: Could not find any volumes.";
