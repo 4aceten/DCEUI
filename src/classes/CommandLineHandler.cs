@@ -782,9 +782,7 @@ public class CommandLineHandler
     **/
     private void exit_program()
     {
-        AnsiConsole.WriteLine("");
-        AnsiConsole.WriteLine("Exiting program...");
-        Thread.Sleep(1200);
+        AnsiConsole.WriteLine("Exited program.");
         Environment.Exit(0);
     }
 }
