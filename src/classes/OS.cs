@@ -189,10 +189,11 @@ public class OS : IOS
         string terminal_application = "";
         string terminal_arguments = "";
 
+
         if (OS.Is_windows())
         {
-            terminal_application = "cmd.exe";
-            terminal_arguments = @$"/C {command + " " + args}";
+            terminal_application = "CMD.exe";
+            terminal_arguments = $@"/C ""{command + " " + args}""";
         }
         else
         {
@@ -202,7 +203,7 @@ public class OS : IOS
 
         try
         {
-            var process = new Process()
+            var terminal = new Process()
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -212,26 +213,29 @@ public class OS : IOS
                 }
             };
 
+            if(OS.Is_windows())
+            {
+                terminal.StartInfo.RedirectStandardInput = true;
+                terminal.StartInfo.RedirectStandardOutput = true;
+                terminal.StartInfo.UseShellExecute = false;
+            }
+
             // Mac specific requirements.
             if (OS.Is_macos())
             {
-                process.StartInfo.RedirectStandardError = false;
-                process.StartInfo.UseShellExecute = true;
+                terminal.StartInfo.RedirectStandardError = false;
+                terminal.StartInfo.UseShellExecute = true;
             }
 
-            // TODO - Figure out how to make standard error work on MacOS and possibly Linux?
-            if (!OS.Is_macos())
-            {
-                this.os_cli_response = process.StandardError.ReadToEnd() ?? "";
-            }
 
-            process.Start();
-            process.WaitForExit();
-            process.Close();
+
+            terminal.Start();
+            terminal.WaitForExit();
+            terminal.Close();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            throw ex;
         }
 
     }
