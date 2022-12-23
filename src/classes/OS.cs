@@ -215,6 +215,7 @@ public class OS : IOS
 
             if(OS.Is_windows())
             {
+                terminal.StartInfo.CreateNoWindow = true;
                 terminal.StartInfo.RedirectStandardInput = true;
                 terminal.StartInfo.RedirectStandardOutput = true;
                 terminal.StartInfo.UseShellExecute = false;
@@ -227,9 +228,8 @@ public class OS : IOS
                 terminal.StartInfo.UseShellExecute = true;
             }
 
-
-
             terminal.Start();
+            terminal.BeginOutputReadLine();
             terminal.WaitForExit();
             terminal.Close();
         }
