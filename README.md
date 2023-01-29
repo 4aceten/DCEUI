@@ -19,4 +19,4 @@ The application is written in C# utilising the [.NET Core](https://dotnet.micros
 
 ## Support my work
 If you found the application useful, or would like to support my future creative endeavors, you can do so by going to this link:
-https://ko-fi.com/kristiannavoid
+https://ko-fi.com/4aceten
