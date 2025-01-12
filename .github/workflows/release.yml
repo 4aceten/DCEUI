@@ -22,15 +22,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x' # Update as needed
-
-      # Restore dependencies
-      - name: Restore dependencies
-        run: dotnet restore
+          dotnet-version: '9.0.101'
 
       # Publish the application
       - name: Publish for ${{ matrix.os }}
-        run: dotnet publish -c Release -r ${{ matrix.os }} \
+        run: |
+          dotnet publish ./src/DCEUI.sln -c Release -r ${{ matrix.os }} \
               /p:PublishSingleFile=true \
               /p:IncludeNativeLibrariesForSelfExtract=false \
               /p:PublishTrimmed=true \
@@ -41,7 +38,7 @@ jobs:
       - name: Zip binaries
         run: |
           mkdir -p artifacts
-          zip -r artifacts/binary-${{ matrix.os }}.zip **/bin/Release/net*/${{ matrix.os }}/publish/*
+          zip -r artifacts/binary-${{ matrix.os }}.zip ./src/**/bin/Release/net*/${{ matrix.os }}/publish/*
 
       # Upload binaries to the GitHub Release
       - name: Upload binaries to GitHub Release
