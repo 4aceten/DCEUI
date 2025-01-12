@@ -109,7 +109,8 @@ public class Docker
 
     public void get_all_docker_images()
     {
-        this.data_response_parser(os.run_command(cli_command, @"images -a"));
+        this.data_response_parser(os.run_command(cli_command, @"image ls --format ""{{.ID}},{{.Repository}}"""));
+
         if (data_menu_instruction_response.Count == 0)
         {
             cli_response = "Error: Could not find any images.";
@@ -118,7 +119,7 @@ public class Docker
 
     public void get_all_docker_volumes()
     {
-        this.data_response_parser(os.run_command(cli_command, @"volume ls"));
+        this.data_response_parser(os.run_command(cli_command, @"volume ls --format ""{{.Name}}"""));
         if (data_menu_instruction_response.Count == 0)
         {
             cli_response = "Error: Could not find any volumes.";
@@ -144,6 +145,7 @@ public class Docker
     public void inspect(string name)
     {
         cli_response = os.run_command(cli_command, @$"inspect {name}");
+        Console.WriteLine(cli_response);
     }
 
     public void start_container(string id)
