@@ -28,11 +28,11 @@ jobs:
       - name: Publish for ${{ matrix.os }}
         run: |
           dotnet publish ./src/DCEUI.sln -c Release -r ${{ matrix.os }} \
-          /p:PublishSingleFile=true \
-          /p:IncludeNativeLibrariesForSelfExtract=false \
-          /p:PublishTrimmed=true \
-          /p:TrimMode=Link \
-          --self-contained true
+              /p:PublishSingleFile=true \
+              /p:IncludeNativeLibrariesForSelfExtract=false \
+              /p:PublishTrimmed=true \
+              /p:TrimMode=Link \
+              --self-contained true
 
       # Zip the published binaries
       - name: Zip binaries
