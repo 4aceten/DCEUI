@@ -30,8 +30,8 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
 
       # Navigate to the tests folder
-      - name: Change to tests folder
-        run: cd tests
+      - name: Change to src folder
+        run: cd src
 
       # Restore dependencies
       - name: Restore dependencies
@@ -39,4 +39,4 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: dotnet test ./tests --no-restore --verbosity normal
+        run: dotnet test --no-restore --verbosity normal
