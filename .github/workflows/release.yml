@@ -24,11 +24,11 @@ jobs:
         with:
           dotnet-version: '9.0.101'
 
-      # Publish the application with custom options
+      # Publish the main application
       - name: Publish for ${{ matrix.os }}
         run: |
           echo "Publishing for ${{ matrix.os }}..."
-          dotnet publish ./src/DCEUI.sln -c Release -r ${{ matrix.os }} \
+          dotnet publish ./src/DCEUI.csproj -c Release -r ${{ matrix.os }} \
               /p:PublishSingleFile=true \
               /p:IncludeNativeLibrariesForSelfExtract=false \
               /p:PublishTrimmed=true \
