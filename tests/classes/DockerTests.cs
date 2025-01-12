@@ -21,13 +21,15 @@ namespace DCEUI.Tests
 
         private void create_container_for_test()
         {
-            this.container_id = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "run -d redis").Split("\n")[0];
+            string output = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "run -d echokrist/dceui-test-container:1.0.0");
+            this.container_id = output.Trim();
         }
 
         private void pull_image_for_test()
         {
-            this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "pull redis");
-            this.image_id = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "images -q redis").Split("\n")[0];
+            this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "pull echokrist/dceui-test-container:1.0.0");
+            string output = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "images -q echokrist/dceui-test-container:1.0.0");
+            this.image_id = output.Trim();
         }
 
         [TestMethod()]
@@ -68,41 +70,48 @@ namespace DCEUI.Tests
         {
             this.create_container_for_test();
             this.docker.delete_container(this.container_id);
-            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error") && !this.docker.get_cli_response().Contains("Error"));
+            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
         }
 
-        //[TestMethod()]
-        //public void delete_imageTest()
-        //{
-        //    this.pull_image_for_test();
-        //    this.docker.delete_image(this.image_id);
-        //    Assert.IsTrue(!this.docker.cli_response.Contains("Error") && !this.docker.cli_response.Contains("Error"));
-        //}
+        [TestMethod()]
+        public void delete_imageTest()
+        {
+            this.create_container_for_test();
+            this.docker.stop_container(this.container_id);
+            this.image_id = this.docker.get_os_instance().run_command(
+                this.docker.get_cli_command(),
+                @$"container inspect --format='{{{{.Image}}}}' {this.container_id}"
+            ).Trim();
+            this.volume_id = this.docker.get_os_instance().run_command(
+                this.docker.get_cli_command(),
+                @$"container inspect --format=""{{{{range .Mounts}}}}{{{{.Name}}}}{{{{end}}}}"" {this.container_id}"
+            ).Trim();
+            this.docker.delete_container(this.container_id);
+            this.docker.delete_image(this.image_id);
+            this.docker.delete_volume(this.volume_id);
+            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
+        }
 
         [TestMethod()]
         public void delete_volumeTest()
         {
-            try
-            {
-                this.create_container_for_test();
-                this.docker.stop_container(this.container_id);
-                this.volume_id = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), @$"inspect--format = {{.Id}} {this.container_id}");
-                this.docker.delete_volume(this.volume_id);
-                this.docker.delete_container(this.container_id);
-                Assert.IsTrue(!this.docker.get_cli_response().Contains("Error") && !this.docker.get_cli_response().Contains("Error"));
-            } catch(Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
+            this.create_container_for_test();
+            this.docker.stop_container(this.container_id);
 
-
+            this.volume_id = this.docker.get_os_instance().run_command(
+                this.docker.get_cli_command(),
+                @$"container inspect --format=""{{{{range .Mounts}}}}{{{{.Name}}}}{{{{end}}}}"" {this.container_id}"
+            ).Trim();
+            this.docker.delete_container(this.container_id);
+            this.docker.delete_volume(this.volume_id);
+            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
         }
 
         [TestMethod()]
         public void get_backup_file_listTest()
         {
             this.docker.get_backup_file_list_images();
-            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error") && !this.docker.get_cli_response().Contains("Error"));
+            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
         }
 
         [TestMethod()]
