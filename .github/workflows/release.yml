@@ -37,19 +37,17 @@ jobs:
               /p:TrimMode=Link \
               --self-contained true
 
-      # Upload binaries as an artifact
-      - name: Upload binaries
-        uses: actions/upload-artifact@v3
-        with:
-          name: binary-${{ matrix.os }}
-          path: |
-            **/bin/Release/net*/${{ matrix.os }}/publish/*
+      # Zip the published binaries
+      - name: Zip binaries
+        run: |
+          mkdir -p artifacts
+          zip -r artifacts/binary-${{ matrix.os }}.zip **/bin/Release/net*/${{ matrix.os }}/publish/*
 
-      # Attach binaries to the release
+      # Upload binaries to the GitHub Release
       - name: Upload binaries to GitHub Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: "**/bin/Release/net*/${{ matrix.os }}/publish/*"
+          asset_path: artifacts/binary-${{ matrix.os }}.zip
           asset_name: binary-${{ matrix.os }}.zip
           asset_content_type: application/zip
