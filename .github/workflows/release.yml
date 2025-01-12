@@ -2,7 +2,7 @@ name: Build and Publish on Release
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   publish:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ osx-x64, osx-arm64, linux-x64, linux-arm64, win-x64, win-arm64 ]
+        os: [osx-x64, osx-arm64, linux-x64, linux-arm64, win-x64, win-arm64]
 
     steps:
       # Checkout the code
@@ -24,19 +24,22 @@ jobs:
         with:
           dotnet-version: '9.0.101'
 
-      # Publish the application
+      # Publish the application with custom options
       - name: Publish for ${{ matrix.os }}
         run: |
+          echo "Publishing for ${{ matrix.os }}..."
           dotnet publish ./src/DCEUI.sln -c Release -r ${{ matrix.os }} \
               /p:PublishSingleFile=true \
               /p:IncludeNativeLibrariesForSelfExtract=false \
               /p:PublishTrimmed=true \
               /p:TrimMode=Link \
+              /p:UseAppHost=true \
               --self-contained true
 
       # Zip the published binaries
       - name: Zip binaries
         run: |
+          echo "Zipping binaries for ${{ matrix.os }}..."
           mkdir -p artifacts
           zip -r artifacts/binary-${{ matrix.os }}.zip ./src/**/bin/Release/net*/${{ matrix.os }}/publish/*
 
