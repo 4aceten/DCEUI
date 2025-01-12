@@ -145,7 +145,6 @@ public class Docker
     public void inspect(string name)
     {
         cli_response = os.run_command(cli_command, @$"inspect {name}");
-        Console.WriteLine(cli_response);
     }
 
     public void start_container(string id)
@@ -165,8 +164,8 @@ public class Docker
 
     public void delete_container(string id)
     {
-        cli_response = os.run_command(cli_command, @$"container stop {id} -f");
-        cli_response = os.run_command(cli_command, @$"container rm {id}  -f");
+        cli_response = os.run_command(cli_command, @$"container stop {id}");
+        cli_response = os.run_command(cli_command, @$"container rm {id}");
     }
 
     public void delete_image(string id)
@@ -176,7 +175,7 @@ public class Docker
 
     public void delete_volume(string id)
     {
-        cli_response = os.run_command(cli_command, @$"volume rm {id}  -f");
+        cli_response = os.run_command(cli_command, @$"volume rm {id} -f");
     }
 
     public void get_backup_file_list_containers()
