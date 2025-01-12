@@ -61,11 +61,11 @@ public class CommandLineHandler
     {
         AnsiConsole.Write(
         new FigletText("DCEUI")
-        .LeftAligned()
+        .LeftJustified()
         .Color(Color.Red)
         );
 
-        AnsiConsole.WriteLine("©Kristian-n-a 2022 - " + DateTime.Now.ToString("yyyy"));
+        AnsiConsole.WriteLine("©echokrist 2022 - " + DateTime.Now.ToString("yyyy"));
     }
 
 
@@ -93,7 +93,7 @@ public class CommandLineHandler
     public void render_category_ui()
     {
         var rule = new Rule();
-        rule.Alignment = Justify.Left;
+        rule.Justify(Justify.Left);
         rule.Style = Style.Parse(Color.Red.ToString());
         AnsiConsole.Write(rule); AnsiConsole.WriteLine("");
         int selectionprompt_pagesize = (menu.menu_category_list.Count() >= 3) ? menu.menu_category_list.Count() * gui_minimum_required_pagesize : gui_minimum_required_pagesize;
@@ -689,7 +689,7 @@ public class CommandLineHandler
     {
         try
         {
-            this.os.open_browser("https://ko-fi.com/kristiannavoid");
+            this.os.open_browser("https://ko-fi.com/echokrist");
             return true;
         } catch(Exception ex)
         {
