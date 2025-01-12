@@ -1,30 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RuntimeIdentifiers>osx-x64;linux-x64;win-x64</RuntimeIdentifiers>
-    <Configurations>Release;Debug</Configurations>
-    <ReleaseVersion>1.1</ReleaseVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RuntimeIdentifiers>osx-x64;linux-x64;win-x64</RuntimeIdentifiers>
+        <Configurations>Release;Debug</Configurations>
+        <ReleaseVersion>1.1</ReleaseVersion>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <LangVersion>preview</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <LangVersion>preview</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <LangVersion>13</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-	<Using Include="Spectre.Console" />
-  </ItemGroup>
-  
+    <ItemGroup>
+        <Using Include="Spectre.Console"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.49.1" />
-  </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Spectre.Console" Version="0.49.1"/>
+    </ItemGroup>
 
 </Project>

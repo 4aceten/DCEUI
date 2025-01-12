@@ -1,21 +1,18 @@
-
-using System.Xml.Linq;
-
 namespace DCEUI.classes;
 
 public class Docker
 {
-    private string cli_command = "docker";
+    private readonly string cli_command = "docker";
 
-    private Dictionary<string, string> data_menu_instruction_response = new Dictionary<string, string>();
+    private readonly Dictionary<string, string> data_menu_instruction_response = new();
+
+    private readonly OS? os;
 
     private string? cli_response = "";
 
-    private OS? os = null;
-
     public Docker(OS Os)
     {
-        this.os = Os;
+        os = Os;
     }
 
     public string get_cli_command()
@@ -30,12 +27,12 @@ public class Docker
 
     public OS? get_os_instance()
     {
-        return this.os ?? null;
+        return os ?? null;
     }
 
     public Dictionary<string, string> get_data_menu_instruction_response()
     {
-        return this.data_menu_instruction_response;
+        return data_menu_instruction_response;
     }
 
     public void clear_data()
@@ -48,96 +45,84 @@ public class Docker
     {
         cli_response = response;
 
-        foreach (var input in response.ToString().Split("\n"))
-        {
+        foreach (var input in response.Split("\n"))
             if (input != "" && input != "\n")
             {
-
                 if (input.Contains(','))
                 {
                     var info = input.Split(',');
                     if (!data_menu_instruction_response.ContainsKey(info[0]))
-                    {
                         data_menu_instruction_response.Add(info[0], info[1]);
-                    }
                 }
                 else
                 {
                     if (!data_menu_instruction_response.ContainsKey(input))
-                    {
                         data_menu_instruction_response.Add(input, input);
-                    }
                 }
             }
-        }
     }
 
     public void ssh_container(string id)
     {
-        this.start_container(id);
-        os.run_terminal(cli_command, $@"exec -it {id} /bin/bash");
+        // Start the container (assuming start_container handles starting the container if it's not running)
+        start_container(id);
 
-        if (this.os.get_os_cli_response().Length > 0 && this.os.get_os_cli_response().Contains("Error") || this.os.get_os_cli_response().Contains("error"))
-        {
-            cli_response = this.os.get_os_cli_response();
-        }
+        // Execute the /bin/bash command in the container
+        os.run_terminal(cli_command, $@"exec -it {id}");
+
+        // Retrieve the CLI response
+        var cliResponse = os.get_os_cli_response();
+
+        // Check if the response contains an error
+        if (!string.IsNullOrEmpty(cliResponse) && (cliResponse.Contains("Error") || cliResponse.Contains("error")))
+            cli_response = cliResponse; // Store the error response
     }
+
 
     public void get_all_docker_containers()
     {
-        this.data_response_parser(os.run_command(cli_command, @"container ls -a --format ""{{.ID}},{{.Names}}"""));
+        data_response_parser(os.run_command(cli_command, @"container ls -a --format ""{{.ID}},{{.Names}}"""));
+        if (data_menu_instruction_response.Count == 0) cli_response = "Error: Could not find any containers.";
     }
 
     public void get_all_docker_containers_status_stopped()
     {
-        this.data_response_parser(os.run_command(cli_command, @"container ls -a --filter ""status=exited"" --format ""{{.ID}},{{.Names}}"""));
+        data_response_parser(os.run_command(cli_command,
+            @"container ls -a --filter ""status=exited"" --format ""{{.ID}},{{.Names}}"""));
     }
 
     public void get_all_docker_containers_status_running()
     {
-        this.data_response_parser(os.run_command(cli_command, @"container ls -a --filter ""status=running"" --format ""{{.ID}},{{.Names}}"""));
+        data_response_parser(os.run_command(cli_command,
+            @"container ls -a --filter ""status=running"" --format ""{{.ID}},{{.Names}}"""));
     }
 
     public void get_all_docker_containers_with_columns()
     {
-        this.data_response_parser(os.run_command(cli_command, @"container ls -a"));
-        if (data_menu_instruction_response.Count == 1)
-        {
-            cli_response = "Error: Could not find any containers.";
-        }
+        data_response_parser(os.run_command(cli_command, @"container ls -a"));
+        if (data_menu_instruction_response.Count == 1) cli_response = "Error: Could not find any containers.";
     }
 
     public void get_all_docker_images()
     {
-        this.data_response_parser(os.run_command(cli_command, @"image ls --format ""{{.ID}},{{.Repository}}"""));
+        data_response_parser(os.run_command(cli_command, @"image ls --format ""{{.ID}},{{.Repository}}"""));
 
-        if (data_menu_instruction_response.Count == 0)
-        {
-            cli_response = "Error: Could not find any images.";
-        }
+        if (data_menu_instruction_response.Count == 0) cli_response = "Error: Could not find any images.";
     }
 
     public void get_all_docker_volumes()
     {
-        this.data_response_parser(os.run_command(cli_command, @"volume ls --format ""{{.Name}}"""));
-        if (data_menu_instruction_response.Count == 0)
-        {
-            cli_response = "Error: Could not find any volumes.";
-        }
-
+        data_response_parser(os.run_command(cli_command, @"volume ls --format ""{{.Name}}"""));
+        if (data_menu_instruction_response.Count == 0) cli_response = "Error: Could not find any volumes.";
     }
 
     public void delete_all_data()
     {
-        this.get_all_docker_containers();
+        get_all_docker_containers();
 
         if (data_menu_instruction_response.Count > 0)
-        {
             foreach (var container in data_menu_instruction_response)
-            {
                 cli_response = os.run_command(cli_command, $"kill container {container.Key}");
-            }
-        }
 
         cli_response = os.run_command(cli_command, @"system prune -af --volumes");
     }
@@ -180,12 +165,12 @@ public class Docker
 
     public void get_backup_file_list_containers()
     {
-        this.data_response_parser(os.get_all_files_in_application_backup_folder("container"));
+        data_response_parser(os.get_all_files_in_application_backup_folder("container"));
     }
 
     public void get_backup_file_list_images()
     {
-        this.data_response_parser(os.get_all_files_in_application_backup_folder("image"));
+        data_response_parser(os.get_all_files_in_application_backup_folder("image"));
     }
 
     public void commit_container(string name)
@@ -195,12 +180,13 @@ public class Docker
 
     public void save_container(string name)
     {
-        cli_response = os.run_command(cli_command, $@"save {name.ToLower()}-backup -o {this.os.get_application_data_folder()}/{name.ToLower()}-backup-container.tar");
+        cli_response = os.run_command(cli_command,
+            $@"save {name.ToLower()}-backup -o {os.get_application_data_folder()}/{name.ToLower()}-backup-container.tar");
     }
 
     public void load_backup_container(string name)
     {
-        cli_response = os.run_command(cli_command, $@"load -i {this.os.get_application_data_folder()}/{name.ToLower()} -q");
+        cli_response = os.run_command(cli_command, $@"load -i {os.get_application_data_folder()}/{name.ToLower()} -q");
     }
 
     public void run_image(string id)
@@ -210,21 +196,24 @@ public class Docker
 
     public void save_image(string file_name)
     {
-        cli_response = os.run_command(cli_command, $"image save -o {this.os.get_application_data_folder()}/{file_name.ToLower()}-backup-image.tar {file_name}");
+        cli_response = os.run_command(cli_command,
+            $"image save -o {os.get_application_data_folder()}/{file_name.ToLower()}-backup-image.tar {file_name}");
     }
 
     public void restore_image(string file_name)
     {
-        cli_response = os.run_command(cli_command, $"image load -i {this.os.get_application_data_folder()}/{file_name}");
+        cli_response = os.run_command(cli_command, $"image load -i {os.get_application_data_folder()}/{file_name}");
     }
 
     public void save_volume(string name)
     {
-        cli_response = os.run_command(cli_command, $@"docker run --rm --volumes-from dbstore -v {System.IO.Directory.GetCurrentDirectory()}:/backup ubuntu tar cvf /backup/backup.tar /dbdata");
+        cli_response = os.run_command(cli_command,
+            $@"docker run --rm --volumes-from dbstore -v {Directory.GetCurrentDirectory()}:/backup ubuntu tar cvf /backup/backup.tar /dbdata");
     }
 
     public void restore_volume(string name)
     {
-        cli_response = os.run_command(cli_command, "docker run --rm --volumes-from dbstore2 -v $(pwd):/backup ubuntu bash -c $(cd / dbdata && tar xvf / backup / backup.tar--strip 1)");
+        cli_response = os.run_command(cli_command,
+            "docker run --rm --volumes-from dbstore2 -v $(pwd):/backup ubuntu bash -c $(cd / dbdata && tar xvf / backup / backup.tar--strip 1)");
     }
 }

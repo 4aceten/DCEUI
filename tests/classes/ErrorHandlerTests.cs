@@ -1,44 +1,44 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DCEUI.classes;
+﻿using DCEUI.classes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DCEUI.Tests
+namespace DCEUI.Tests;
+
+[TestClass]
+public class ErrorHandlerTests
 {
-    [TestClass()]
-    public class ErrorHandlerTests
+    private static readonly DI di = new();
+    private readonly ErrorHandler errorHandler;
+
+    public ErrorHandlerTests()
     {
-        static DI di = new DI();
-        ErrorHandler errorHandler;
+        errorHandler = di.get_errorhandler_instance();
+    }
 
-        public ErrorHandlerTests()
+    [TestMethod]
+    public void render_errorTest()
+    {
+        try
         {
-            this.errorHandler = di.get_errorhandler_instance();
+            errorHandler.render_error(new Exception("test ran ErrorHandler.render_error"));
+            Assert.Fail();
         }
-
-        [TestMethod()]
-        public void render_errorTest()
+        catch (Exception ex)
         {
-            try
-            {
-                this.errorHandler.render_error(new Exception("test ran ErrorHandler.render_error"));
-                Assert.Fail();
-            } catch(Exception ex)
-            {
-                Assert.IsTrue(true);
-            }
+            Assert.IsTrue(true);
         }
+    }
 
-        [TestMethod()]
-        public void render_program_errorTest()
+    [TestMethod]
+    public void render_program_errorTest()
+    {
+        try
         {
-            try
-            {
-                this.errorHandler.render_program_error(new Exception("test ran ErrorHandler.render_error"));
-                Assert.Fail();
-            }
-            catch (Exception ex)
-            {
-                Assert.IsTrue(true);
-            }
+            errorHandler.render_program_error(new Exception("test ran ErrorHandler.render_error"));
+            Assert.Fail();
+        }
+        catch (Exception ex)
+        {
+            Assert.IsTrue(true);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using DCEUI.classes;
 
-
-DI di = new DI();
+var di = new DI();
 
 try
 {

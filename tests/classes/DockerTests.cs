@@ -1,127 +1,132 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DCEUI.classes;
+﻿using DCEUI.classes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DCEUI.Tests
+namespace DCEUI.Tests;
+
+[TestClass]
+public class DockerTests
 {
-    [TestClass()]
-    public class DockerTests
+    private static readonly DI di = new();
+
+    private readonly Docker docker;
+
+    private string container_id = "";
+    private string image_id = "";
+    private string volume_id = "";
+
+    public DockerTests()
     {
-        static DI di = new DI();
+        docker = di.get_docker_instance();
+    }
 
-        Docker docker;
+    private void create_container_for_test()
+    {
+        var output = docker.get_os_instance()
+            .run_command(docker.get_cli_command(), "run -d echokrist/dceui-test-container:1.0.0");
+        container_id = output.Trim();
+    }
 
-        string container_id = "";
-        string image_id = "";
-        string volume_id = "";
+    private void pull_image_for_test()
+    {
+        docker.get_os_instance().run_command(docker.get_cli_command(), "pull echokrist/dceui-test-container:1.0.0");
+        var output = docker.get_os_instance()
+            .run_command(docker.get_cli_command(), "images -q echokrist/dceui-test-container:1.0.0");
+        image_id = output.Trim();
+    }
 
-        public DockerTests()
-        {
-            this.docker = di.get_docker_instance();
-        }
+    [TestMethod]
+    public void DockerTest()
+    {
+        Assert.IsNotNull(docker.get_os_instance());
+    }
 
-        private void create_container_for_test()
-        {
-            string output = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "run -d echokrist/dceui-test-container:1.0.0");
-            this.container_id = output.Trim();
-        }
+    [TestMethod]
+    public void get_all_docker_containersTest()
+    {
+        create_container_for_test();
+        docker.get_all_docker_containers();
+        docker.delete_container(container_id);
+        Assert.IsTrue(docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) &&
+                      docker.get_data_menu_instruction_response().Count >= 0);
+    }
 
-        private void pull_image_for_test()
-        {
-            this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "pull echokrist/dceui-test-container:1.0.0");
-            string output = this.docker.get_os_instance().run_command(this.docker.get_cli_command(), "images -q echokrist/dceui-test-container:1.0.0");
-            this.image_id = output.Trim();
-        }
+    [TestMethod]
+    public void get_all_docker_imagesTest()
+    {
+        pull_image_for_test();
+        docker.get_all_docker_images();
+        docker.delete_image(image_id);
+        Assert.IsTrue(docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) &&
+                      docker.get_data_menu_instruction_response().Count >= 0);
+    }
 
-        [TestMethod()]
-        public void DockerTest()
-        {
-            Assert.IsNotNull(this.docker.get_os_instance());
-        }
+    [TestMethod]
+    public void get_all_docker_volumesTest()
+    {
+        create_container_for_test();
+        docker.get_all_docker_volumes();
+        docker.delete_container(container_id);
+        Assert.IsTrue(docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) &&
+                      docker.get_data_menu_instruction_response().Count >= 0);
+    }
 
-        [TestMethod()]
-        public void get_all_docker_containersTest()
-        {
-            this.create_container_for_test();
-            this.docker.get_all_docker_containers();
-            this.docker.delete_container(this.container_id);
-            Assert.IsTrue((this.docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) && this.docker.get_data_menu_instruction_response().Count >= 0));
-        }
+    [TestMethod]
+    public void delete_containerTest()
+    {
+        create_container_for_test();
+        docker.delete_container(container_id);
+        Assert.IsTrue(!docker.get_cli_response().Contains("Error"));
+    }
 
-        [TestMethod()]
-        public void get_all_docker_imagesTest()
-        {
-            this.pull_image_for_test();
-            this.docker.get_all_docker_images();
-            this.docker.delete_image(this.image_id);
-            Assert.IsTrue((this.docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) && this.docker.get_data_menu_instruction_response().Count >= 0));
-        }
+    [TestMethod]
+    public void delete_imageTest()
+    {
+        create_container_for_test();
+        docker.stop_container(container_id);
+        image_id = docker.get_os_instance().run_command(
+            docker.get_cli_command(),
+            @$"container inspect --format='{{{{.Image}}}}' {container_id}"
+        ).Trim();
+        volume_id = docker.get_os_instance().run_command(
+            docker.get_cli_command(),
+            @$"container inspect --format=""{{{{range .Mounts}}}}{{{{.Name}}}}{{{{end}}}}"" {container_id}"
+        ).Trim();
+        docker.delete_container(container_id);
+        docker.delete_image(image_id);
+        docker.delete_volume(volume_id);
+        Assert.IsTrue(!docker.get_cli_response().Contains("Error"));
+    }
 
-        [TestMethod()]
-        public void get_all_docker_volumesTest()
-        {
-            this.create_container_for_test();
-            this.docker.get_all_docker_volumes();
-            this.docker.delete_container(this.container_id);
-            Assert.IsTrue((this.docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) && this.docker.get_data_menu_instruction_response().Count >= 0));
-        }
+    [TestMethod]
+    public void delete_volumeTest()
+    {
+        create_container_for_test();
+        docker.stop_container(container_id);
 
-        [TestMethod()]
-        public void delete_containerTest()
-        {
-            this.create_container_for_test();
-            this.docker.delete_container(this.container_id);
-            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
-        }
+        volume_id = docker.get_os_instance().run_command(
+            docker.get_cli_command(),
+            @$"container inspect --format=""{{{{range .Mounts}}}}{{{{.Name}}}}{{{{end}}}}"" {container_id}"
+        ).Trim();
+        docker.delete_container(container_id);
+        docker.delete_volume(volume_id);
+        Assert.IsTrue(!docker.get_cli_response().Contains("Error"));
+    }
 
-        [TestMethod()]
-        public void delete_imageTest()
-        {
-            this.create_container_for_test();
-            this.docker.stop_container(this.container_id);
-            this.image_id = this.docker.get_os_instance().run_command(
-                this.docker.get_cli_command(),
-                @$"container inspect --format='{{{{.Image}}}}' {this.container_id}"
-            ).Trim();
-            this.volume_id = this.docker.get_os_instance().run_command(
-                this.docker.get_cli_command(),
-                @$"container inspect --format=""{{{{range .Mounts}}}}{{{{.Name}}}}{{{{end}}}}"" {this.container_id}"
-            ).Trim();
-            this.docker.delete_container(this.container_id);
-            this.docker.delete_image(this.image_id);
-            this.docker.delete_volume(this.volume_id);
-            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
-        }
+    [TestMethod]
+    public void get_backup_file_listTest()
+    {
+        docker.get_backup_file_list_images();
+        Assert.IsTrue(!docker.get_cli_response().Contains("Error"));
+    }
 
-        [TestMethod()]
-        public void delete_volumeTest()
-        {
-            this.create_container_for_test();
-            this.docker.stop_container(this.container_id);
+    [TestMethod]
+    public void clear_dataTest()
+    {
+        docker.clear_data();
 
-            this.volume_id = this.docker.get_os_instance().run_command(
-                this.docker.get_cli_command(),
-                @$"container inspect --format=""{{{{range .Mounts}}}}{{{{.Name}}}}{{{{end}}}}"" {this.container_id}"
-            ).Trim();
-            this.docker.delete_container(this.container_id);
-            this.docker.delete_volume(this.volume_id);
-            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
-        }
+        Assert.IsTrue(docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) &&
+                      docker.get_data_menu_instruction_response().Count == 0);
 
-        [TestMethod()]
-        public void get_backup_file_listTest()
-        {
-            this.docker.get_backup_file_list_images();
-            Assert.IsTrue(!this.docker.get_cli_response().Contains("Error"));
-        }
-
-        [TestMethod()]
-        public void clear_dataTest()
-        {
-            this.docker.clear_data();
-
-            Assert.IsTrue((this.docker.get_data_menu_instruction_response().GetType() == typeof(Dictionary<string, string>) && this.docker.get_data_menu_instruction_response().Count == 0));
-
-            Assert.AreEqual("", this.docker.get_cli_response());
-        }
+        Assert.AreEqual("", docker.get_cli_response());
     }
 }

@@ -2,59 +2,53 @@
 using DCEUI.classes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spectre.Console;
-using Spectre.Console.Testing;
-using static System.Net.Mime.MediaTypeNames;
-using System;
-using Spectre.Console.Advanced;
 
-namespace DCEUI.Tests
+namespace DCEUI.Tests;
+
+[TestClass]
+public class CommandLineHandlerTests
 {
-    [TestClass()]
-    public class CommandLineHandlerTests
+    private readonly CommandLineHandler commandLineHandler;
+    private readonly DI di = new();
+
+    public CommandLineHandlerTests()
     {
-        DI di = new DI();
+        commandLineHandler = di.get_commandlinehandler_instance();
+    }
 
-        CommandLineHandler commandLineHandler;
+    [TestMethod]
+    public void CommandLineHandlerTest()
+    {
+        Assert.IsNotNull(di.get_os_instance());
 
-        public CommandLineHandlerTests()
-        {
-            this.commandLineHandler = di.get_commandlinehandler_instance();
-        }
+        Assert.IsNotNull(di.get_menu_instance());
 
-        [TestMethod()]
-        public void CommandLineHandlerTest()
-        {
-            Assert.IsNotNull(di.get_os_instance());
+        Assert.IsNotNull(di.get_docker_instance());
 
-            Assert.IsNotNull(di.get_menu_instance());
+        Assert.IsNotNull(di.get_errorhandler_instance());
+    }
 
-            Assert.IsNotNull(di.get_docker_instance());
+    [TestMethod]
+    public void render_header_uiTest()
+    {
+        AnsiConsole.Record();
 
-            Assert.IsNotNull(di.get_errorhandler_instance());
-        }
+        commandLineHandler.render_header_ui();
 
-        [TestMethod()]
-        public void render_header_uiTest()
-        {
-            AnsiConsole.Record();
+        var cli_text_output = AnsiConsole.ExportText();
 
-            this.commandLineHandler.render_header_ui();
+        Assert.AreNotEqual("", cli_text_output);
+    }
 
-            string cli_text_output = AnsiConsole.ExportText();
+    [TestMethod]
+    public void report_issueTest()
+    {
+        Assert.IsTrue(commandLineHandler.report_issue());
+    }
 
-            Assert.AreNotEqual("", cli_text_output);
-        }
-
-        [TestMethod()]
-        public void report_issueTest()
-        {
-            Assert.IsTrue(this.commandLineHandler.report_issue());
-        }
-
-        [TestMethod()]
-        public void buy_me_a_coffeeTest()
-        {
-            Assert.IsTrue(this.commandLineHandler.buy_me_a_coffee());
-        }
+    [TestMethod]
+    public void buy_me_a_coffeeTest()
+    {
+        Assert.IsTrue(commandLineHandler.buy_me_a_coffee());
     }
 }

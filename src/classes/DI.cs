@@ -1,80 +1,79 @@
 ﻿using classes;
 using DCEUI.interfaces;
 
-namespace DCEUI.classes
+namespace DCEUI.classes;
+
+public class DI : IDI
 {
-    public class DI : IDI
+    private readonly CommandLineHandler commandLineHandler;
+    private readonly Docker docker;
+    private readonly ErrorHandler errorHandler;
+    private readonly Menu menu;
+    private readonly OS os;
+
+    public DI()
     {
-        private OS os;
-        private Docker docker;
-        private Menu menu;
-        private ErrorHandler errorHandler;
-        private CommandLineHandler commandLineHandler;
+        os = Os();
+        docker = Docker();
+        os.set_Docker_instance(docker);
+        menu = Menu();
+        errorHandler = ErrorHandler();
+        commandLineHandler = CommandLineHandler();
+    }
 
-        public DI()
-        {
-            this.os = Os();
-            this.docker = Docker();
-            this.os.set_Docker_instance(this.docker);
-            this.menu = Menu();
-            this.errorHandler = ErrorHandler();
-            this.commandLineHandler = CommandLineHandler();
-        }
+    public OS Os()
+    {
+        var Os = new OS();
+        return Os;
+    }
 
-        public OS Os()
-        {
-            OS Os = new OS();
-            return Os;
-        }
+    public Docker Docker()
+    {
+        var docker = new Docker(os);
+        return docker;
+    }
 
-        public Docker Docker()
-        {
-            Docker docker = new Docker(os);
-            return docker;
-        }
+    public Menu Menu()
+    {
+        var menu = new Menu();
+        return menu;
+    }
 
-        public Menu Menu()
-        {
-            Menu menu = new Menu();
-            return menu;
-        }
+    public ErrorHandler ErrorHandler()
+    {
+        var errorHandler = new ErrorHandler();
+        return errorHandler;
+    }
 
-        public ErrorHandler ErrorHandler()
-        {
-            ErrorHandler errorHandler = new ErrorHandler();
-            return errorHandler;
-        }
-
-        public CommandLineHandler CommandLineHandler()
-        {
-            CommandLineHandler commandLineHandler = new CommandLineHandler(os, menu, docker, errorHandler);
-            return commandLineHandler;
-        }
+    public CommandLineHandler CommandLineHandler()
+    {
+        var commandLineHandler = new CommandLineHandler(os, menu, docker, errorHandler);
+        return commandLineHandler;
+    }
 
 
-        public OS get_os_instance()
-        {
-            return this.os;
-        }
+    public OS get_os_instance()
+    {
+        return os;
+    }
 
-        public Docker get_docker_instance()
-        {
-            return this.docker;
-        }
+    public Docker get_docker_instance()
+    {
+        return docker;
+    }
 
-        public Menu get_menu_instance()
-        {
-            return this.menu;
-        }
+    public Menu get_menu_instance()
+    {
+        return menu;
+    }
 
-        public ErrorHandler get_errorhandler_instance()
-        {
-            return this.errorHandler;
-        }
+    public ErrorHandler get_errorhandler_instance()
+    {
+        return errorHandler;
+    }
 
-        public CommandLineHandler get_commandlinehandler_instance()
-        {
-            return this.commandLineHandler;
-        }
+    public CommandLineHandler get_commandlinehandler_instance()
+    {
+        return commandLineHandler;
     }
 }
