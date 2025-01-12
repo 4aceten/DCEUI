@@ -33,10 +33,6 @@ jobs:
       - name: Change to src folder
         run: cd src
 
-      # Restore dependencies
-      - name: Restore dependencies
-        run: dotnet restore ./tests
-
       # Run tests
       - name: Run tests
         run: dotnet test --no-restore --verbosity normal
