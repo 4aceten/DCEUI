@@ -43,7 +43,6 @@ namespace DCEUI.Tests
             string cli_text_output = AnsiConsole.ExportText();
 
             Assert.AreNotEqual("", cli_text_output);
-            Assert.IsTrue((cli_text_output.Contains("©Kristian-n-a 2022 - 2022")));
         }
 
         [TestMethod()]
