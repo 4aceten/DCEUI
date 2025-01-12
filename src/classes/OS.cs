@@ -89,19 +89,9 @@ public class OS : IOS
 
     public bool is_docker_currently_running_as_service()
     {
-        try
-        {
-            // Attempt to run a simple Docker CLI command
-            var result = run_command("docker", "info");;
-
-            // If the command succeeds, Docker is running
-            return !string.IsNullOrEmpty(result) && !result.ToLower().Contains("error");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Docker service check failed: {ex.Message}");
-            return false;
-        }
+        var result = run_command("docker", "info");;
+        // If the command succeeds, Docker is running
+        return !string.IsNullOrEmpty(result) && !result.ToLower().Contains("error");
     }
 
     public string get_all_files_in_application_backup_folder(string file_extention = "")
