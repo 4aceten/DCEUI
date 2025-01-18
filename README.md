@@ -7,7 +7,7 @@ with useful UI elements.
 
 ## Tech stack
 
-The application is written in C# utilising the [.NET Core](https://dotnet.microsoft.com/en-us/) framework by Microsoft
+The application is written in C# utilising the [.NET](https://dotnet.microsoft.com/en-us/) framework by Microsoft
 and [Spectre.Console](https://spectreconsole.net) UI library.
 
 ## Features the following functionality
